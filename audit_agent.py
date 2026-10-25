@@ -4,39 +4,37 @@ from datetime import datetime
 
 
 def audit_deletion(record):
-    remaining_sources = []
+    remaining_sources = [
+        source
+        for source, deleted in record["sources"].items()
+        if not deleted
+    ]
 
-    for source, deleted in record["sources"].items():
-        if not deleted:
-            remaining_sources.append(source)
-
-    if remaining_sources:
-        status = "INCOMPLETE"
-    else:
-        status = "COMPLETE"
-
-    report = {
+    return {
         "customer_id": record["customer_id"],
-        "status": status,
+        "status": "INCOMPLETE" if remaining_sources else "COMPLETE",
         "remaining_sources": remaining_sources,
         "audit_time": datetime.now().isoformat()
     }
 
-    return report
+
+def main():
+    with open("sample_data.json", "r") as file:
+        data = json.load(file)
+
+    reports = []
+
+    for customer in data["customers"]:
+        if customer["deletion_requested"]:
+            reports.append(audit_deletion(customer))
+
+    print(json.dumps(reports, indent=4))
+
+    with open("audit_report.json", "w") as file:
+        json.dump(reports, file, indent=4)
+
+    print("\nAudit report saved to audit_report.json")
 
 
 if __name__ == "__main__":
-    sample_record = {
-        "customer_id": "C001",
-        "sources": {
-            "database": True,
-            "backup": True,
-            "logs": False,
-            "cloud_storage": True
-        }
-    }
-
-    result = audit_deletion(sample_record)
-
-    print(json.dumps(result, indent=4))
-
+    main()
