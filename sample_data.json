@@ -1,1 +1,36 @@
 
+{
+  "customers": [
+    {
+      "customer_id": "C001",
+      "deletion_requested": true,
+      "sources": {
+        "database": true,
+        "backup": true,
+        "logs": false,
+        "cloud_storage": true
+      }
+    },
+    {
+      "customer_id": "C002",
+      "deletion_requested": true,
+      "sources": {
+        "database": true,
+        "backup": true,
+        "logs": true,
+        "cloud_storage": true
+      }
+    },
+    {
+      "customer_id": "C003",
+      "deletion_requested": true,
+      "sources": {
+        "database": false,
+        "backup": true,
+        "logs": false,
+        "cloud_storage": true
+      }
+    }
+  ]
+}
+
